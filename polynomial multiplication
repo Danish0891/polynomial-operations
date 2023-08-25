@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node {
+    float coeffi;
+    int pow;
+    struct node *next;
+};
+
+struct node *temp;
+struct node *create_polynomial(struct node *head, float x, int y)
+{
+    struct node *newnode = (struct node *)malloc(sizeof(struct node));
+    if (head == NULL)
+    {
+        temp = head = newnode;
+        temp->next = NULL;
+    }
+    else
+    {
+        temp->next = newnode;
+        temp = newnode;
+    }
+    temp->coeffi = x, temp->pow = y;
+    temp->next = NULL;
+
+    return head;
+}
+
+struct node *multi_polynomails(struct node *multiply,struct node *head1,struct node *head2){
+    struct node*temp1=head1,*temp2=head2;
+    float x;
+    int y;
+    while(temp1!=NULL){
+        temp2=head2;
+        while(temp2!=NULL){
+        x=temp1->coeffi*temp2->coeffi;
+        y=temp1->pow+temp2->pow;
+
+        struct  node *ptr=multiply;
+        int verify=1;
+        for( ;ptr!=NULL;ptr=ptr->next){
+            if(ptr->pow==y){
+                ptr->coeffi=ptr->coeffi+x;
+                verify++;
+                break;
+            }
+        }
+        
+        if(verify==1){
+            struct node *newnode=(struct node *)malloc(sizeof(struct node));
+
+            if(multiply==NULL){
+                temp=multiply=newnode;
+                temp->next=NULL;
+            }
+            else{
+                temp->next=newnode;
+                temp=newnode;
+                temp->next=NULL;
+            }
+            temp->coeffi=x;
+            temp->pow=y;
+        }
+       
+        temp2=temp2->next;
+        }
+        temp1=temp1->next;
+    }
+    return multiply;
+}
+
+int main(){
+    printf("Enter 1st polynomial\n");
+    float x;
+    int y;
+    struct node *head1=NULL,*head2=NULL;
+    int choice=1;
+    while(choice!=0){
+        printf("Enter coefficient and power: ");
+        scanf("%f %d",&x,&y);
+        head1=create_polynomial(head1,x,y);
+        printf("Press 1 continue and 0 for exit: ");
+        scanf("%d",&choice);
+    }
+
+    
+
+    printf("Enter 2nd polynomail\n");
+    choice=1;
+    while(choice!=0){
+        printf("Enter coefficient and power: ");
+        scanf("%f %d",&x,&y);
+        head2=create_polynomial(head2,x,y);
+
+        printf("Press 1 continue and 0 for exit: ");
+        scanf("%d",&choice);
+    }
+
+    
+    struct node *multiply=NULL;
+
+    multiply=multi_polynomails(multiply,head1,head2);
+
+    for(temp=multiply;temp!=NULL;temp=temp->next){
+        printf("%f %d\n",temp->coeffi,temp->pow);
+    }
+
+}
